@@ -64,3 +64,11 @@ footer{background-color: #3498db}
 #lead-content .lead-photo{width:260px;height:260px;max-width:60vw;max-height:60vw;margin-top:10px}
 #lead-content .btn-rounded-white{font-size:1.3em;padding:18px 40px}
 @media only screen and (max-width: 480px){#lead-content .lead-photo{width:180px;height:180px}#lead-content .btn-rounded-white{font-size:1em;padding:12px 24px}}
+
+/* Lead section: no blue tint, navy/maroon text to match the white chart background */
+#lead-overlay{display:none}
+#lead-content h1{color:#1F2E5C;margin-bottom:25px}
+#lead-content .btn-rounded-white{color:#1F2E5C;border-color:#1F2E5C;background:rgba(255,255,255,0.85)}
+#lead-content .btn-rounded-white:hover{color:#fff;background:#7A1F2B;border-color:#7A1F2B}
+#lead-down{color:#1F2E5C}
+#lead-down span{border-color:#7A1F2B}
