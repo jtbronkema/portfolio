@@ -88,3 +88,46 @@ header a, header a:focus, header a:hover{color:#1F2E5C}
 
 /* Rounded "pill" buttons in Skills and Certifications */
 #skills li, #certifications li{border-radius:20px;padding:5px 14px}
+
+/* ===== Round 5 updates ===== */
+/* One font everywhere: Lato (icons keep their own icon font) */
+body, h1, h2, h3, h4, h5, h6, p, li, a, span, div, button, input, textarea{font-family:'Lato', 'Helvetica Neue', Arial, sans-serif}
+.fa{font-family:FontAwesome !important}
+
+/* Top navigation bar: larger, bigger text, darker/thicker border */
+@media only screen and (min-width: 768px){
+  header ul{padding:12px 18px;border:2px solid #9A9DA3;border-top:none;border-bottom-right-radius:8px;border-bottom-left-radius:8px}
+  header a{font-size:1.15em;padding:12px 16px}
+}
+
+/* Section headings: larger, navy underline */
+.heading{font-size:2.5em;font-weight:400;color:#1F2E5C}
+#about h2, #experience h2, #education h2, #projects h2, #skills h2, #certifications h2{color:#1F2E5C}
+.heading:after{background:#1F2E5C;height:2px;width:60px}
+
+/* About Me: stacked, wider, larger text */
+#about .about-heading{text-align:center}
+#about .about-text{max-width:1000px;float:none;margin:0 auto}
+#about p{font-size:1.25em;line-height:1.7;color:#4a5560}
+
+/* Professional Experience: darker job titles, larger dates */
+#experience-timeline .vtimeline-content h3{color:#1F2E5C;font-weight:400}
+#experience-timeline .vtimeline-date{font-size:1.2em;font-weight:400;color:#1F2E5C}
+
+/* Keep the name clear of the taller nav bar on shorter browser windows */
+@media only screen and (min-width: 768px){ #lead-content{top:calc(50% + 30px)} }
+@media only screen and (min-width: 768px) and (max-height: 820px){
+  #lead-content h1{font-size:4.2em;margin-bottom:18px}
+  #lead-content .lead-photo{width:210px;height:210px}
+  #lead-content .btn-rounded-white{font-size:1.15em;padding:14px 32px}
+}
+@media only screen and (max-width: 767px){ #lead-content h1{font-size:3em} }
+@media only screen and (max-width: 400px){ #lead-content h1{font-size:2.5em} }
+
+/* Top navigation bar: light grey background, bold links */
+header ul{background:#EDEEF1}
+header a, header a:focus{font-weight:700}
+header a:hover{background:#DCDFE5}
+
+/* Section heading underline: wider, same thickness */
+.heading:after{width:100px;height:2px}
