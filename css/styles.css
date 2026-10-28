@@ -131,3 +131,23 @@ header a:hover{background:#DCDFE5}
 
 /* Section heading underline: wider, same thickness */
 .heading:after{width:100px;height:2px}
+
+/* Professional Experience: company logo tiles on the timeline */
+.vtimeline-logo{background:#fff !important;border:2px solid #D9DBE0;border-radius:10px;box-shadow:0 2px 6px rgba(31,46,92,0.10);display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box}
+.vtimeline-logo img{max-width:100%;max-height:100%;display:block}
+@media only screen and (min-width: 768px){
+  #experience-timeline:before, #experience-timeline:after{left:284px}
+  #experience-timeline .vtimeline-date{width:195px;top:18px}
+  .vtimeline-icon{margin-left:260px;margin-top:7px}
+  .vtimeline-logo{width:144px;height:64px;margin-left:213px;margin-top:0;padding:6px 8px}
+  .vtimeline-content{margin-left:380px}
+}
+/* Phones: stack each job - logo/date row on top, full-width card below */
+@media only screen and (max-width: 767px){
+  #experience-timeline:before, #experience-timeline:after{display:none}
+  .vtimeline-point{margin-bottom:28px}
+  .vtimeline-icon{float:left;margin:0 14px 12px 0;width:50px;height:50px;margin-top:1px}
+  .vtimeline-logo{width:104px;height:52px;margin-top:0}
+  #experience-timeline .vtimeline-date{position:static;display:block;width:auto;text-align:left;line-height:52px;margin:0 0 12px 0}
+  .vtimeline-content{margin-left:0;clear:both}
+}
