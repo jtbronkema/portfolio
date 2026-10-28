@@ -72,3 +72,19 @@ footer{background-color: #3498db}
 #lead-content .btn-rounded-white:hover{color:#fff;background:#7A1F2B;border-color:#7A1F2B}
 #lead-down{color:#1F2E5C}
 #lead-down span{border-color:#7A1F2B}
+
+/* Background: centered so the left text and right-side code both stay on screen */
+#lead{background-position:center top}
+
+/* Light blue text -> navy (same as name) */
+a, a:focus, a:hover{color:#1F2E5C}
+header a, header a:focus, header a:hover{color:#1F2E5C}
+#mobile-menu-open, #mobile-menu-close{color:#1F2E5C}
+
+/* Professional Experience timeline: maroon line and map-marker circles */
+#experience-timeline:before{background:#7A1F2B}
+#experience-timeline:after{background:linear-gradient(to bottom, #7A1F2B, rgba(122,31,43,0))}
+.vtimeline-icon{background:#7A1F2B}
+
+/* Rounded "pill" buttons in Skills and Certifications */
+#skills li, #certifications li{border-radius:20px;padding:5px 14px}
