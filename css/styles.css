@@ -151,3 +151,12 @@ header a:hover{background:#DCDFE5}
   #experience-timeline .vtimeline-date{position:static;display:block;width:auto;text-align:left;line-height:52px;margin:0 0 12px 0}
   .vtimeline-content{margin-left:0;clear:both}
 }
+
+/* Rounded corners on the large boxes: Experience, Education, Projects */
+.vtimeline-content, .education-block, .project{border-radius:14px}
+
+/* Footer: navy bar, maroon LinkedIn/GitHub icons on white circles */
+footer{background-color:#1F2E5C}
+.social li{margin:0 6px}
+.social a, .social a:focus{color:#7A1F2B;background:#fff;width:46px;height:46px;line-height:46px;padding:0;border-radius:50%;text-align:center;margin-top:31px;transition:background 0.2s, color 0.2s}
+.social a:hover{color:#fff;background:#7A1F2B}
