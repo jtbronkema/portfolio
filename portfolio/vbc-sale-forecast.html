@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <!-- <title>Scrolling Nav - Start Bootstrap Template</title> -->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet" />
+        <link href="css/theme.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+
+        <!-- Header-->
+        <header class="header bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">Forecasting Demand for the Quarterly VBC 30% Off Sale</h1>
+                <p class="lead">Python (XGBoost, joblib) | Machine Learning, Demand Forecasting, Parallel Computing, Excel Automation</p>
+                <p class="lead">Project Completed by: Jackson Bronkema, in partnership with Fresh Thyme Market’s VBC category managers</p>
+            </div>
+        </header>
+
+        <section class="bg-light" id="services">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+
+                        <div class="data-notice" role="note"><strong>Note:</strong> All data on this page has been anonymized to protect confidential company information. Figures, charts, and screenshots are illustrative.</div>
+
+                        <h2 class="h2top">Problem Statement</h2>
+                        <p class="lead">
+                            Four times a year, Fresh Thyme Market runs a 30% off sale on its vitamins and body care (VBC) products. Before each sale,
+                            category managers have to decide how much of each of more than 750 products to order and how many units to send to each of
+                            the chain’s 70 stores. Ordering too much of a product leads to shrink (product waste), so I built a machine learning
+                            forecast to help them make those decisions.
+                        </p>
+
+                        <!-- Key results -->
+                        <div class="stat-row">
+                            <div class="stat"><span class="stat-num">50,000+</span><span class="stat-label">Individual XGBoost models</span></div>
+                            <div class="stat"><span class="stat-num">750+</span><span class="stat-label">VBC products forecast</span></div>
+                            <div class="stat"><span class="stat-num">90%+</span><span class="stat-label">of SKUs with reduced product waste</span></div>
+                            <div class="stat"><span class="stat-num">$328K</span><span class="stat-label">Average shrink reduction per sale</span></div>
+                        </div>
+
+                        <h2>Our Approach</h2>
+                        <p class="lead">
+                            The project had two parts: a demand forecast for every product at every store, and an Excel report that put those
+                            forecasts in front of the category managers in a form they could use when ordering.
+                        </p>
+
+                        <h4>The Forecasting Model</h4>
+                        <p class="lead">
+                            I used XGBoost machine learning models to forecast how many units of each VBC product every store would sell during
+                            the upcoming 30% off sale.
+                        </p>
+                        <div class="callout">
+                            <span class="callout-label">One model per store, per SKU</span>
+                            <div class="callout-math"><b>750+</b> VBC products <span>&times;</span> <b>70</b> stores <span>=</span> <b>50,000+</b> XGBoost models</div>
+                            <p>Each product at each store got its own model, so every forecast reflects how that exact item sells at that exact location.</p>
+                        </div>
+
+                        <h4>Scaling to 50,000+ Models</h4>
+                        <p class="lead">
+                            Training more than 50,000 models one at a time would have taken far too long, so I used Python’s joblib package to optimize
+                            and parallelize the code. Each product-store pair ran as its own task, and joblib spread those tasks across the computer’s
+                            CPU cores so many models trained at the same time.
+                        </p>
+
+                        <h4>Category Manager Excel Report</h4>
+                        <p class="lead">
+                            Using Python, I generated an Excel file that gave category managers, for every product at every store:
+                        </p>
+                        <ol class="lead">
+                            <li>How many units sold in each of the last 5 years of sales</li>
+                            <li>How many units we forecast to sell in the upcoming sale</li>
+                            <li>A 95% confidence interval around each forecast</li>
+                            <li>A graph of each forecast alongside its sales history</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Excel screenshot (wider than the text column) -->
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-xl-11">
+                        <figure class="shot">
+                            <a href="../images/vbc_excel.png" target="_blank" rel="noopener"><img src="../images/vbc_excel.png" alt="Example Excel forecast report: units sold for 10 SKUs over the past 5 sales with a forecast and 95% confidence interval" /></a>
+                            <figcaption>Example report for one store: 10 SKUs, the past 5 sales, the forecast for the next sale, and its 95% confidence interval. Click to enlarge.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+                        <p class="lead">
+                            Category managers found the report extremely helpful when ordering product and deciding how many units of each product
+                            to send to each store.
+                        </p>
+
+                        <h2 class="mt-4">Results</h2>
+
+                        <h4>Product Shrink per VBC Sale: Expected vs. With the Model</h4>
+                        <div class="chart-card">
+                            <div class="chart-legend"><span><i style="background:#B9BCC3"></i>Expected shrink (legacy ordering)</span><span><i style="background:#1F2E5C"></i>Actual shrink (XGBoost forecast)</span></div>
+                            <svg class="waste-chart" viewBox="0 0 820 420" role="img" aria-label="Expected shrink versus shrink with the XGBoost model for each quarterly VBC sale in 2023 and 2024" xmlns="http://www.w3.org/2000/svg"><line x1="70" x2="800" y1="328.0" y2="328.0" stroke="#E3E4E7"/><text x="60" y="332.0" text-anchor="end" font-size="12" fill="#4a5560">$0K</text><line x1="70" x2="800" y1="268.4" y2="268.4" stroke="#E3E4E7"/><text x="60" y="272.4" text-anchor="end" font-size="12" fill="#4a5560">$200K</text><line x1="70" x2="800" y1="208.8" y2="208.8" stroke="#E3E4E7"/><text x="60" y="212.8" text-anchor="end" font-size="12" fill="#4a5560">$400K</text><line x1="70" x2="800" y1="149.2" y2="149.2" stroke="#E3E4E7"/><text x="60" y="153.2" text-anchor="end" font-size="12" fill="#4a5560">$600K</text><line x1="70" x2="800" y1="89.6" y2="89.6" stroke="#E3E4E7"/><text x="60" y="93.6" text-anchor="end" font-size="12" fill="#4a5560">$800K</text><line x1="70" x2="800" y1="30.0" y2="30.0" stroke="#E3E4E7"/><text x="60" y="34.0" text-anchor="end" font-size="12" fill="#4a5560">$1.0M</text><rect x="82.6" y="122.4" width="31.0" height="205.6" rx="3" fill="#B9BCC3"/><rect x="117.6" y="210.3" width="31.0" height="117.7" rx="3" fill="#1F2E5C"/><text x="98.1" y="116.4" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$690K</text><text x="133.1" y="204.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$395K</text><text x="115.6" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q1</text><text x="115.6" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $295K</text><rect x="173.8" y="137.3" width="31.0" height="190.7" rx="3" fill="#B9BCC3"/><rect x="208.9" y="228.2" width="31.0" height="99.8" rx="3" fill="#1F2E5C"/><text x="189.4" y="131.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$640K</text><text x="224.4" y="222.2" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$335K</text><text x="206.9" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q2</text><text x="206.9" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $305K</text><rect x="265.1" y="114.9" width="31.0" height="213.1" rx="3" fill="#B9BCC3"/><rect x="300.1" y="213.3" width="31.0" height="114.7" rx="3" fill="#1F2E5C"/><text x="280.6" y="108.9" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$715K</text><text x="315.6" y="207.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$385K</text><text x="298.1" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q3</text><text x="298.1" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $330K</text><rect x="356.4" y="95.6" width="31.0" height="232.4" rx="3" fill="#B9BCC3"/><rect x="391.4" y="200.5" width="31.0" height="127.5" rx="3" fill="#1F2E5C"/><text x="371.9" y="89.6" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$780K</text><text x="406.9" y="194.5" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$428K</text><text x="389.4" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q4</text><text x="389.4" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $352K</text><rect x="447.6" y="117.9" width="31.0" height="210.1" rx="3" fill="#B9BCC3"/><rect x="482.6" y="210.3" width="31.0" height="117.7" rx="3" fill="#1F2E5C"/><text x="463.1" y="111.9" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$705K</text><text x="498.1" y="204.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$395K</text><text x="480.6" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q1</text><text x="480.6" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $310K</text><rect x="538.9" y="131.3" width="31.0" height="196.7" rx="3" fill="#B9BCC3"/><rect x="573.9" y="226.1" width="31.0" height="101.9" rx="3" fill="#1F2E5C"/><text x="554.4" y="125.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$660K</text><text x="589.4" y="220.1" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$342K</text><text x="571.9" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q2</text><text x="571.9" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $318K</text><rect x="630.1" y="109.0" width="31.0" height="219.0" rx="3" fill="#B9BCC3"/><rect x="665.1" y="210.3" width="31.0" height="117.7" rx="3" fill="#1F2E5C"/><text x="645.6" y="103.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$735K</text><text x="680.6" y="204.3" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$395K</text><text x="663.1" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q3</text><text x="663.1" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $340K</text><rect x="721.4" y="86.6" width="31.0" height="241.4" rx="3" fill="#B9BCC3"/><rect x="756.4" y="198.1" width="31.0" height="129.9" rx="3" fill="#1F2E5C"/><text x="736.9" y="80.6" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$810K</text><text x="771.9" y="192.1" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1F2E5C">$436K</text><text x="754.4" y="348.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">Q4</text><text x="754.4" y="366.0" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7A1F2B">▼ $374K</text><line x1="78.0" x2="427.0" y1="384.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><line x1="78.0" x2="78.0" y1="379.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><line x1="427.0" x2="427.0" y1="379.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><text x="252.5" y="404.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">2023 <tspan fill="#7A1F2B">&#8212; $1.28M saved</tspan></text><line x1="443.0" x2="792.0" y1="384.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><line x1="443.0" x2="443.0" y1="379.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><line x1="792.0" x2="792.0" y1="379.0" y2="384.0" stroke="#9A9DA3" stroke-width="1.5"/><text x="617.5" y="404.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1F2E5C">2024 <tspan fill="#7A1F2B">&#8212; $1.34M saved</tspan></text><line x1="70" x2="800" y1="328.0" y2="328.0" stroke="#9A9DA3" stroke-width="2"/></svg>
+                        </div>
+                        <p class="chart-avg">Average reduction across 8 sales: <strong>$328K per sale</strong> &nbsp;&middot;&nbsp; 4 sales per year</p>
+
+                        <ol class="lead">
+                            <li>Reduced product waste on more than 90% of the 750+ VBC SKUs</li>
+                            <li>Reduced shrink by an average of $328K per sale, across four sales a year (about $1.3M per year)</li>
+                            <li>Trained 50,000+ store- and SKU-level XGBoost models efficiently by parallelizing the code with joblib</li>
+                            <li>Gave category managers a clear, store-level view of history, forecast, and uncertainty to guide ordering and allocation</li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer-->
+        <footer class="py-5 bg-primary">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Jackson Bronkema 2026</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
