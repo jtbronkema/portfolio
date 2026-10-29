@@ -214,3 +214,21 @@ footer{background-color:#1F2E5C}
 .skills-label{margin:18px 0 4px;font-size:0.85em;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9A9DA3}
 #skills ul{max-width:1000px}
 @media only screen and (max-width: 767px){ .edu-logo{flex:0 0 auto;width:200px} }
+
+/* Projects grouped by where they were completed */
+.project-group{max-width:900px;margin:10px auto 22px;display:flex;align-items:center;gap:18px;text-align:left;padding-bottom:14px;border-bottom:2px solid #E3E4E7}
+.project-group-next{margin-top:60px}
+.project-group-logo{flex:0 0 150px;height:70px;background:#fff;border:2px solid #D9DBE0;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box;box-shadow:0 2px 6px rgba(31,46,92,0.08)}
+.project-group-logo img{max-width:100%;max-height:100%;display:block}
+.project-group-text h3{margin:0;font-size:1.5em;font-weight:700;color:#1F2E5C}
+.project-group-text p{margin:4px 0 0;font-size:0.98em;color:#7A1F2B;font-weight:700}
+@media only screen and (max-width: 767px){
+  .project-group{flex-direction:column;align-items:flex-start;gap:10px}
+  .project-group-logo{flex:0 0 auto;width:150px}
+}
+/* Phones: stack project image above its text */
+@media only screen and (max-width: 767px){
+  .project-image{float:none;width:100%;height:200px;overflow:hidden}
+  .project-image img{width:100%;height:100%;object-fit:cover;max-width:none}
+  .project-info{position:static;margin-left:0;width:auto;padding:22px 18px;transform:none;top:auto;left:auto}
+}
