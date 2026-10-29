@@ -66,3 +66,9 @@ pre.code-body .o, pre.code-body .p{color:#6b7280 !important}
 .callout p{margin:0;color:#4a5560;font-size:1rem}
 .chart-avg{text-align:center;font-size:0.95rem;color:#4a5560;margin:0.6rem 0 1.5rem}
 .chart-avg strong{color:#7A1F2B}
+
+/* Wide screenshot figure (project pages) */
+figure.shot{margin:1.5rem 0 2rem;text-align:center}
+figure.shot img{width:100%;height:auto;border-radius:10px;border:1px solid #E3E4E7;box-shadow:0 6px 20px rgba(31,46,92,0.12)}
+figure.shot a{text-decoration:none}
+figure.shot figcaption{margin-top:10px;font-size:0.9rem;color:#9A9DA3}
