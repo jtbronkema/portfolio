@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <!-- <title>Scrolling Nav - Start Bootstrap Template</title> -->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet" />
+        <link href="css/theme.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+
+        <!-- Header-->
+        <header class="header bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">Forecasting Holiday Meat Demand with Machine Learning</h1>
+                <p class="lead">Python (XGBoost, joblib) | Machine Learning, Demand Forecasting, Parallel Computing, Inventory Analytics</p>
+                <p class="lead">Project Completed by: Jackson Bronkema, in partnership with the Fresh Thyme Market Meat Merchandising team</p>
+            </div>
+        </header>
+
+        <section class="bg-light" id="services">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+
+                        <div class="data-notice" role="note"><strong>Note:</strong> All data on this page has been anonymized to protect confidential company information. Figures, charts, and code are illustrative.</div>
+
+                        <h2 class="h2top">Problem Statement</h2>
+                        <p class="lead">
+                            Each year, Fresh Thyme Market needs to forecast how much of each holiday meat item every store will sell at
+                            Thanksgiving, Christmas, and Easter. That forecast was produced through a legacy system managed by category
+                            managers. I partnered with the Meat merchandising team to build a machine learning forecast to replace it
+                            across all 70 Fresh Thyme Market stores.
+                        </p>
+
+                        <!-- Key results -->
+                        <div class="stat-row">
+                            <div class="stat"><span class="stat-num">2,100+</span><span class="stat-label">Individual XGBoost models</span></div>
+                            <div class="stat"><span class="stat-num">$113K</span><span class="stat-label">Reduction in product waste per period</span></div>
+                            <div class="stat"><span class="stat-num">70</span><span class="stat-label">Fresh Thyme stores</span></div>
+                            <div class="stat"><span class="stat-num">30+</span><span class="stat-label">Holiday meat SKUs</span></div>
+                        </div>
+
+                        <h2>Our Approach</h2>
+                        <p class="lead">
+                            The project had two parts: a new demand forecast to set how much product each store should receive, and a daily
+                            inventory tool to help the meat team manage that product once it arrived.
+                        </p>
+
+                        <h4>The Forecasting Model</h4>
+                        <p class="lead">
+                            I built XGBoost machine learning models to forecast demand for holiday meat items for Thanksgiving, Christmas,
+                            and Easter at every Fresh Thyme Market store. Working closely with the Meat merchandising team, we put the new
+                            forecast into use in place of the legacy forecasting process previously run by category managers.
+                        </p>
+                        <div class="callout">
+                            <span class="callout-label">One model per store, per SKU</span>
+                            <div class="callout-math"><b>30+</b> holiday meat SKUs <span>&times;</span> <b>70</b> stores <span>=</span> <b>2,100+</b> XGBoost models</div>
+                            <p>Rather than one model for the whole chain, I trained a separate model for every product at every store, so each model
+                            learned the demand pattern of that exact item at that exact location.</p>
+                        </div>
+
+                        <h4>Scaling to 2,100+ Models</h4>
+                        <p class="lead">
+                            Training thousands of models one at a time would have been slow, so I built and ran the program on a remote desktop
+                            and used Python’s joblib package to parallelize it. Each product-store pair became its own task, and joblib spread
+                            those tasks across all of the machine’s CPU cores so many models trained at the same time, making the program run
+                            far more efficiently. The simplified example below shows the approach:
+                        </p>
+                        <div class="code-card">
+                            <div class="code-head"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-file">holiday_forecast.py</span></div>
+<pre class="code-body"><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">xgboost</span><span class="w"> </span><span class="kn">import</span> <span class="n">XGBRegressor</span>
+
+<span class="c1"># Daily holiday meat sales: one row per product, store, and day</span>
+<span class="n">sales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;holiday_meat_sales.csv&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">])</span>
+
+<span class="n">FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;days_to_holiday&quot;</span><span class="p">,</span> <span class="s2">&quot;day_of_week&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">,</span> <span class="s2">&quot;on_promo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prior_year_units&quot;</span><span class="p">,</span> <span class="s2">&quot;store_traffic&quot;</span><span class="p">]</span>
+<span class="n">TARGET</span> <span class="o">=</span> <span class="s2">&quot;units_sold&quot;</span>
+<span class="n">FORECAST_YEAR</span> <span class="o">=</span> <span class="mi">2024</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train_and_forecast</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Train one XGBoost model for a single product at a single store.&quot;&quot;&quot;</span>
+    <span class="n">train</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;holiday_year&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">FORECAST_YEAR</span><span class="p">]</span>
+    <span class="n">upcoming</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;holiday_year&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">FORECAST_YEAR</span><span class="p">]</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">XGBRegressor</span><span class="p">(</span>
+        <span class="n">n_estimators</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+        <span class="n">max_depth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+        <span class="n">subsample</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">objective</span><span class="o">=</span><span class="s2">&quot;reg:squarederror&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">TARGET</span><span class="p">])</span>
+    <span class="n">forecast</span> <span class="o">=</span> <span class="n">upcoming</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">forecast_units</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">upcoming</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">store</span><span class="p">),</span> <span class="n">model</span><span class="p">,</span> <span class="n">forecast</span>
+
+
+<span class="c1"># One task per product-store pair: 30+ SKUs x 70 stores = 2,100+ models</span>
+<span class="n">tasks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">product</span> <span class="ow">in</span> <span class="n">sales</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+    <span class="n">product_df</span> <span class="o">=</span> <span class="n">sales</span><span class="p">[</span><span class="n">sales</span><span class="p">[</span><span class="s2">&quot;product_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">product</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">store</span> <span class="ow">in</span> <span class="n">product_df</span><span class="p">[</span><span class="s2">&quot;store_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">product_df</span><span class="p">[</span><span class="n">product_df</span><span class="p">[</span><span class="s2">&quot;store_id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">store</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">)</span>
+        <span class="n">tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delayed</span><span class="p">(</span><span class="n">train_and_forecast</span><span class="p">)(</span><span class="n">product</span><span class="p">,</span> <span class="n">store</span><span class="p">,</span> <span class="n">df</span><span class="p">))</span>
+
+<span class="c1"># Train every model in parallel across all CPU cores on the remote desktop</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)(</span><span class="n">tasks</span><span class="p">)</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">model</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">results</span><span class="p">}</span>
+<span class="n">forecast_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">forecast</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">forecast</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+</code></pre>
+                        </div>
+                        <p class="code-note">Simplified example. Column names and model settings are illustrative.</p>
+
+
+                        <h4>Daily Inventory Visibility Tool</h4>
+                        <p class="lead">
+                            Alongside the forecast, I built a tool that gave the meat team a daily view of every holiday product at every store:
+                        </p>
+                        <ol class="lead">
+                            <li>How many units of each product were in the store</li>
+                            <li>How many units had sold</li>
+                            <li>How many more units were scheduled to be delivered in the coming days</li>
+                        </ol>
+                        <p class="lead">
+                            With this view, category managers could see which stores were running long or short on a product and move
+                            product between stores before it went to waste.
+                        </p>
+
+                        <h2 class="mt-4">Results</h2>
+                        <h4>Holiday Product Waste: Expected vs. With the Model</h4>
+                        <div class="chart-card">
+                            <div class="chart-legend"><span><i style="background:#B9BCC3"></i>Expected waste (legacy forecast)</span><span><i style="background:#1F2E5C"></i>Actual waste (XGBoost model)</span></div>
+                            <svg class="waste-chart" viewBox="0 0 720 400" role="img" aria-label="Expected holiday meat product waste versus waste with the XGBoost model, by month" xmlns="http://www.w3.org/2000/svg"><line x1="70" x2="700" y1="320.0" y2="320.0" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="324.0" text-anchor="end" font-size="12" fill="#4a5560">$0K</text><line x1="70" x2="700" y1="278.6" y2="278.6" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="282.6" text-anchor="end" font-size="12" fill="#4a5560">$50K</text><line x1="70" x2="700" y1="237.1" y2="237.1" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="241.1" text-anchor="end" font-size="12" fill="#4a5560">$100K</text><line x1="70" x2="700" y1="195.7" y2="195.7" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="199.7" text-anchor="end" font-size="12" fill="#4a5560">$150K</text><line x1="70" x2="700" y1="154.3" y2="154.3" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="158.3" text-anchor="end" font-size="12" fill="#4a5560">$200K</text><line x1="70" x2="700" y1="112.9" y2="112.9" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="116.9" text-anchor="end" font-size="12" fill="#4a5560">$250K</text><line x1="70" x2="700" y1="71.4" y2="71.4" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="75.4" text-anchor="end" font-size="12" fill="#4a5560">$300K</text><line x1="70" x2="700" y1="30.0" y2="30.0" stroke="#E3E4E7" stroke-width="1"/><text x="60" y="34.0" text-anchor="end" font-size="12" fill="#4a5560">$350K</text><rect x="113.2" y="146.0" width="58.8" height="174.0" rx="4" fill="#B9BCC3"/><text x="142.6" y="139.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$210K</text><rect x="178.0" y="222.2" width="58.8" height="97.8" rx="4" fill="#1F2E5C"/><text x="207.4" y="215.2" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$118K</text><text x="175.0" y="342.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1F2E5C">April</text><text x="175.0" y="359.0" text-anchor="middle" font-size="12" fill="#4a5560">(Easter)</text><text x="175.0" y="378.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7A1F2B">▼ $92K (44%)</text><rect x="323.2" y="100.4" width="58.8" height="219.6" rx="4" fill="#B9BCC3"/><text x="352.6" y="93.4" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$265K</text><rect x="388.0" y="198.2" width="58.8" height="121.8" rx="4" fill="#1F2E5C"/><text x="417.4" y="191.2" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$147K</text><text x="385.0" y="342.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1F2E5C">November</text><text x="385.0" y="359.0" text-anchor="middle" font-size="12" fill="#4a5560">(Thanksgiving)</text><text x="385.0" y="378.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7A1F2B">▼ $118K (45%)</text><rect x="533.2" y="79.7" width="58.8" height="240.3" rx="4" fill="#B9BCC3"/><text x="562.6" y="72.7" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$290K</text><rect x="598.0" y="186.6" width="58.8" height="133.4" rx="4" fill="#1F2E5C"/><text x="627.4" y="179.6" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1F2E5C">$161K</text><text x="595.0" y="342.0" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1F2E5C">December</text><text x="595.0" y="359.0" text-anchor="middle" font-size="12" fill="#4a5560">(Christmas)</text><text x="595.0" y="378.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#7A1F2B">▼ $129K (44%)</text><line x1="70" x2="700" y1="320.0" y2="320.0" stroke="#9A9DA3" stroke-width="2"/></svg>
+                        </div>
+                        <p class="chart-avg">Average reduction across the three holiday months: <strong>$113K per month</strong></p>
+                        
+                        
+                        
+
+                        <ol class="lead">
+                            <li>Replaced the legacy forecasting process for holiday meat items with 2,100+ store- and SKU-level XGBoost models across all 70 Fresh Thyme Market stores</li>
+                            <li>Parallelized model training with joblib on a remote desktop so all 2,100+ models could be built efficiently</li>
+                            <li>Reduced product waste by $113,000 per period</li>
+                            <li>Gave category managers the daily visibility they needed to move product between stores and reduce product shrink</li>
+                        </ol>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer-->
+        <footer class="py-5 bg-primary">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Jackson Bronkema 2026</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
