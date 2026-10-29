@@ -160,3 +160,36 @@ footer{background-color:#1F2E5C}
 .social li{margin:0 6px}
 .social a, .social a:focus{color:#7A1F2B;background:#fff;width:46px;height:46px;line-height:46px;padding:0;border-radius:50%;text-align:center;margin-top:31px;transition:background 0.2s, color 0.2s}
 .social a:hover{color:#fff;background:#7A1F2B}
+
+
+/* Education section: logo cards */
+#education h3{margin:0;font-size:1.35em;font-weight:700;color:#1F2E5C;float:none}
+#education .edu-sub{font-weight:400;color:#1F2E5C}
+#education h4{margin:6px 0 12px;font-size:1.05em;font-weight:400;color:#7A1F2B;clear:none}
+.edu-top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.edu-date{display:inline-block;background:#EDEEF1;color:#1F2E5C;font-weight:700;font-size:0.85em;padding:4px 12px;border-radius:20px;white-space:nowrap;float:none}
+.edu-hl{margin:0 0 14px;padding-left:18px;color:#4a5560;font-size:0.95em}
+.edu-hl li{margin-bottom:4px}
+.edu-label{margin:0 0 8px;font-size:0.8em;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9A9DA3}
+.edu-chips{display:flex;flex-wrap:wrap;gap:6px}
+.edu-chips span{background:#F3F4F6;border:1px solid #E3E4E7;color:#1F2E5C;font-size:0.82em;padding:3px 10px;border-radius:20px;float:none}
+
+.edu-card{max-width:900px;margin:0 auto 28px;display:flex;gap:28px;align-items:flex-start;background:#fff;border:1px solid #dcd9d9;border-radius:14px;padding:26px 28px;text-align:left;box-shadow:0 2px 8px rgba(31,46,92,0.06)}
+.edu-logo{flex:0 0 150px;height:76px;background:#fff;border:2px solid #D9DBE0;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:8px;box-sizing:border-box}
+.edu-logo img{max-width:100%;max-height:100%}
+.edu-body{flex:1;min-width:0}
+
+#education h4{margin:6px 0 4px}
+.edu-meta{margin:0 0 12px;color:#74808a;font-size:0.92em}
+.edu-dot{margin:0 6px;color:#B9BCC3}
+
+@media only screen and (max-width: 767px){
+  .edu-card{flex-direction:column;gap:16px;padding:20px}
+  .edu-logo{flex:0 0 auto;width:150px}
+  .edu-tl:before{display:none}
+  .edu-tl-row{grid-template-columns:144px 1fr;row-gap:12px}
+  .edu-tl-logo{grid-row:1;grid-column:1}
+  .edu-tl-date{grid-row:1;grid-column:2;text-align:left;padding-top:20px;font-size:1em;white-space:nowrap}
+  .edu-tl-card{grid-column:1 / span 2}
+}
+
