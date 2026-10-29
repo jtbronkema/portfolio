@@ -20,3 +20,49 @@ a:hover{color:#7A1F2B}
 /* Footer: navy like the main page */
 footer.bg-primary{background:#1F2E5C !important}
 footer p{color:#fff !important}
+
+/* Key-result stat cards (used on project pages) */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:2rem 0 2.5rem}
+.stat{background:#F6F6F8;border:1px solid #E3E4E7;border-top:4px solid #7A1F2B;border-radius:12px;padding:18px 16px;text-align:center}
+.stat-num{display:block;font-size:2.1rem;font-weight:900;color:#1F2E5C;line-height:1.1}
+.stat-label{display:block;margin-top:6px;font-size:0.95rem;color:#4a5560;line-height:1.35}
+@media (max-width: 767px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+/* Code snippet card (Python) */
+.code-card{margin:1.25rem 0 0.5rem;border:1px solid #E3E4E7;border-radius:12px;overflow:hidden;background:#F6F6F8}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #E3E4E7;background:#EDEEF1}
+.code-dots i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}
+.code-dots i:nth-child(1){background:#7A1F2B}.code-dots i:nth-child(2){background:#9A9DA3}.code-dots i:nth-child(3){background:#1F2E5C}
+.code-file{font-family:SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace !important;font-size:0.8rem;color:#9A9DA3}
+pre.code-body{margin:0;padding:16px 18px;overflow-x:auto;font-size:0.84rem;line-height:1.55;color:#1F2E5C;background:#F6F6F8}
+pre.code-body code, pre.code-body span{font-family:SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace !important;color:inherit}
+pre.code-body .k, pre.code-body .kn, pre.code-body .ow, pre.code-body .kc{color:#7A1F2B !important;font-weight:700}
+pre.code-body .s2, pre.code-body .s1, pre.code-body .s{color:#5B6B8C !important}
+pre.code-body .c1, pre.code-body .c{color:#9A9DA3 !important;font-style:italic}
+pre.code-body .mi, pre.code-body .mf{color:#7A1F2B !important}
+pre.code-body .nn, pre.code-body .nc{color:#1F2E5C !important;font-weight:700}
+pre.code-body .o, pre.code-body .p{color:#6b7280 !important}
+.code-note{font-size:0.85rem;color:#9A9DA3;margin:0 0 1.5rem}
+
+/* Chart card (project pages) */
+.chart-card{margin:1rem 0 0.5rem;border:1px solid #E3E4E7;border-radius:12px;background:#fff;padding:16px 16px 6px;overflow-x:auto}
+.waste-chart{width:100%;min-width:520px;height:auto;display:block}
+.waste-chart text{font-family:'Lato','Helvetica Neue',Arial,sans-serif}
+.chart-legend{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:0.9rem;color:#4a5560;margin-bottom:6px}
+.chart-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+.chart-flag{color:#7A1F2B;font-weight:700}
+
+/* Data notice banner (project pages) */
+.data-notice{background:#F6F6F8;border:1px solid #E3E4E7;border-left:4px solid #7A1F2B;border-radius:8px;padding:12px 16px;margin:0 0 1.75rem;font-size:0.95rem;color:#4a5560}
+.data-notice strong{color:#1F2E5C}
+.data-notice + .h2top{margin-top:0 !important;padding-top:0 !important}
+
+/* Highlighted callout (project pages) */
+.callout{background:#fff;border:1px solid #E3E4E7;border-left:5px solid #1F2E5C;border-radius:12px;padding:18px 22px;margin:0.5rem 0 2rem;box-shadow:0 2px 8px rgba(31,46,92,0.06)}
+.callout-label{display:block;font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#7A1F2B;margin-bottom:6px}
+.callout-math{font-size:1.35rem;color:#1F2E5C;margin-bottom:8px;line-height:1.4}
+.callout-math b{font-weight:900}
+.callout-math span{color:#9A9DA3;margin:0 6px}
+.callout p{margin:0;color:#4a5560;font-size:1rem}
+.chart-avg{text-align:center;font-size:0.95rem;color:#4a5560;margin:0.6rem 0 1.5rem}
+.chart-avg strong{color:#7A1F2B}
