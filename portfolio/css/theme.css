@@ -1,0 +1,22 @@
+/* Theme overrides so project pages match the main portfolio page */
+body{font-family:'Lato','Helvetica Neue',Arial,sans-serif;color:#4a5560;background:#fff}
+h1,h2,h3,h4,h5,h6,p,li,a,span,div,button{font-family:'Lato','Helvetica Neue',Arial,sans-serif}
+
+/* Top banner: light grey with a maroon accent line */
+header.header{background:#EDEEF1 !important;background-image:none !important;border-bottom:4px solid #7A1F2B;padding-top:4.5rem;padding-bottom:3.5rem}
+header.header h1{color:#7A1F2B !important;font-weight:900}
+header.header .lead{color:#1F2E5C !important;font-weight:400;opacity:1}
+
+/* Content */
+section.bg-light{background:#fff !important}
+section{padding-top:5rem;padding-bottom:5rem}
+h2,h3,h4,h5,.h2top{color:#7A1F2B;font-weight:700}
+h2{margin-top:0.5rem}
+p,.lead,li,ol,ul{color:#4a5560}
+.lead{font-weight:400}
+a{color:#1F2E5C;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+a:hover{color:#7A1F2B}
+
+/* Footer: navy like the main page */
+footer.bg-primary{background:#1F2E5C !important}
+footer p{color:#fff !important}
