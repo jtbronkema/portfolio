@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <!-- <title>Scrolling Nav - Start Bootstrap Template</title> -->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet" />
+        <link href="css/theme.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+
+        <!-- Header-->
+        <header class="header bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">Meat &amp; Potatoes: Item-to-Item Affinity Analysis</h1>
+                <p class="lead">SQL | Two-Proportion z-Test, Market Basket Analysis, Statistical Testing, Merchandising Strategy</p>
+                <p class="lead">Project Completed by: Jackson Bronkema, Fresh Thyme Market (Meijer) Advanced Analytics</p>
+            </div>
+        </header>
+
+        <section class="bg-light" id="services">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+
+                        <div class="data-notice" role="note"><strong>Note:</strong> All data on this page has been anonymized to protect confidential company information. Figures, screenshots, and code are illustrative.</div>
+
+                        <h2 class="h2top">Problem Statement</h2>
+                        <p class="lead">
+                            Some items naturally sell together. The classic example is meat and potatoes: a customer buying a ribeye steak is much
+                            more likely to also buy potatoes than a customer who isn’t buying steak. I wanted to measure these relationships for
+                            every meat item sold at Fresh Thyme Market, so the merchandising and marketing teams could use them to build bigger baskets.
+                        </p>
+
+                        <h2>Our Approach</h2>
+                        <p class="lead">
+                            I wrote a SQL query that evaluated every meat item sold at Fresh Thyme Market against every non-meat item. For each
+                            pair, it compared two probabilities:
+                        </p>
+                        <ol class="lead">
+                            <li>The probability that the non-meat item (for example, potatoes) is purchased in a basket <strong>with</strong> the meat item</li>
+                            <li>The probability that the same item is purchased in a basket <strong>without</strong> the meat item</li>
+                        </ol>
+                        <p class="lead">
+                            A two-proportion z-test then tells us whether the difference between those two probabilities is real or could have
+                            happened by chance.
+                        </p>
+
+                        <h4>The Formula</h4>
+                        <div class="math-card">
+                            <div class="math-title">The two-proportion z-score</div>
+                            <div class="math-main">z = <span class="frac"><span>p&#770;<sub>1</sub> &minus; p&#770;<sub>2</sub></span><span><span class="sqrt"><span class="rad">&radic;</span><span class="under">p&#770; (1 &minus; p&#770;) ( 1&#8202;/&#8202;n<sub>1</sub> + 1&#8202;/&#8202;n<sub>2</sub> )</span></span></span></span></div>
+                            <div class="math-defs">
+                                <div><b>p&#770;<sub>1</sub> = x<sub>1</sub> / n<sub>1</sub></b><span>Share of baskets <em>with</em> Ribeye Steak that also contain potatoes</span></div>
+                                <div><b>p&#770;<sub>2</sub> = x<sub>2</sub> / n<sub>2</sub></b><span>Share of baskets <em>without</em> Ribeye Steak that contain potatoes</span></div>
+                                <div><b>p&#770; = (x<sub>1</sub> + x<sub>2</sub>) / (n<sub>1</sub> + n<sub>2</sub>)</b><span>Pooled share of all baskets that contain potatoes</span></div>
+                                <div><b>n<sub>1</sub>, n<sub>2</sub></b><span>Number of baskets with and without Ribeye Steak</span></div>
+                            </div>
+                        </div>
+                        <p class="lead">
+                            <strong>How it works for meat and potatoes:</strong> the top of the formula is simply the difference between how often
+                            potatoes show up in ribeye baskets and how often they show up everywhere else. The bottom is the standard error, which
+                            measures how much that difference would bounce around by random chance alone, based on how common potatoes are overall
+                            and how many baskets we looked at. Dividing one by the other tells us how many standard errors apart the two
+                            probabilities are. A z-score above 1.96 means the difference is statistically significant at 95% confidence; the
+                            larger the z-score, the stronger the evidence that customers buy the two items together on purpose.
+                        </p>
+                        <div class="math-card worked">
+                            <div class="math-title">Worked example: Ribeye Steak &amp; Russet Potatoes</div>
+                            <ol class="math-steps">
+                                <li><b>With Ribeye:</b> 3,252 of 12,000 ribeye baskets had potatoes &rarr; p&#770;<sub>1</sub> = 27.1%</li>
+                                <li><b>Without Ribeye:</b> 97,200 of 1,200,000 other baskets had potatoes &rarr; p&#770;<sub>2</sub> = 8.1%</li>
+                                <li><b>Pooled share:</b> (3,252 + 97,200) / (12,000 + 1,200,000) = 8.29%</li>
+                                <li><b>Standard error:</b> &radic;( 0.0829 &times; 0.9171 &times; (1/12,000 + 1/1,200,000) ) = 0.00253</li>
+                                <li><b>z-score:</b> (0.271 &minus; 0.081) / 0.00253 = <strong>75.1</strong></li>
+                            </ol>
+                        </div>
+                        <p class="lead">
+                            A z-score of 75.1 is far above the 1.96 threshold, so customers who buy ribeye steak are buying potatoes much more
+                            often than everyone else, and that pattern is not a coincidence.
+                        </p>
+
+                        <h4>The SQL Query</h4>
+                        <p class="lead">
+                            The query below finds every basket that contains a meat item, pairs it with every non-meat item in the same basket, and
+                            calculates both probabilities and the z-score for every pair in a single pass:
+                        </p>
+                        <div class="code-card">
+                            <div class="code-head"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-file">meat_item_affinity.sql</span></div>
+<pre class="code-body"><code><span class="c1">-- Two-proportion z-score for every meat item paired with every non-meat item</span>
+<span class="k">WITH</span><span class="w"> </span><span class="n">basket_items</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">          </span><span class="c1">-- one row per item per basket</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">transaction_id</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">item_id</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">item_desc</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">department</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">sales_line_items</span><span class="w"> </span><span class="n">t</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">item_id</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">sale_date</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="s1">&#39;2023-01-01&#39;</span>
+<span class="p">),</span>
+<span class="n">total</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">transaction_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">n_baskets</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">basket_items</span>
+<span class="p">),</span>
+<span class="n">item_counts</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">                </span><span class="c1">-- number of baskets containing each item</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">item_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">baskets</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">basket_items</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">item_id</span>
+<span class="p">),</span>
+<span class="n">pairs</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span><span class="w">                      </span><span class="c1">-- meat item and non-meat item in the same basket</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">item_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">meat_id</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">item_id</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">other_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">both_cnt</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">basket_items</span><span class="w"> </span><span class="n">m</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">basket_items</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">transaction_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">transaction_id</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">department</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;MEAT&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">department</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s1">&#39;MEAT&#39;</span>
+<span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">item_id</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">item_id</span>
+<span class="p">),</span>
+<span class="n">props</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">meat_id</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">other_id</span><span class="p">,</span>
+<span class="w">           </span><span class="n">mc</span><span class="p">.</span><span class="n">baskets</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">n1</span><span class="p">,</span><span class="w">  </span><span class="c1">-- baskets WITH the meat item</span>
+<span class="w">           </span><span class="n">p</span><span class="p">.</span><span class="n">both_cnt</span><span class="w">                  </span><span class="k">AS</span><span class="w"> </span><span class="n">x1</span><span class="p">,</span><span class="w">  </span><span class="c1">--   ...that also have the other item</span>
+<span class="w">           </span><span class="n">t</span><span class="p">.</span><span class="n">n_baskets</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mc</span><span class="p">.</span><span class="n">baskets</span><span class="w">    </span><span class="k">AS</span><span class="w"> </span><span class="n">n2</span><span class="p">,</span><span class="w">  </span><span class="c1">-- baskets WITHOUT the meat item</span>
+<span class="w">           </span><span class="n">oc</span><span class="p">.</span><span class="n">baskets</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">both_cnt</span><span class="w">     </span><span class="k">AS</span><span class="w"> </span><span class="n">x2</span><span class="w">   </span><span class="c1">--   ...that have the other item</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">pairs</span><span class="w"> </span><span class="n">p</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">item_counts</span><span class="w"> </span><span class="n">mc</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mc</span><span class="p">.</span><span class="n">item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">meat_id</span>
+<span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">item_counts</span><span class="w"> </span><span class="n">oc</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">oc</span><span class="p">.</span><span class="n">item_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">other_id</span>
+<span class="w">    </span><span class="k">CROSS</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="n">t</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">meat_id</span><span class="p">,</span>
+<span class="w">       </span><span class="n">other_id</span><span class="p">,</span>
+<span class="w">       </span><span class="n">x1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n1</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">p_with_meat</span><span class="p">,</span>
+<span class="w">       </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n2</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">p_without_meat</span><span class="p">,</span>
+<span class="w">       </span><span class="p">(</span><span class="n">x1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n2</span><span class="p">)</span>
+<span class="w">         </span><span class="o">/</span><span class="w"> </span><span class="n">SQRT</span><span class="p">(</span><span class="w">  </span><span class="p">((</span><span class="n">x1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span><span class="p">))</span>
+<span class="w">                </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">x1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n2</span><span class="p">))</span>
+<span class="w">                </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n2</span><span class="p">))</span><span class="w">  </span><span class="k">AS</span><span class="w"> </span><span class="n">z_score</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">props</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">meat_id</span><span class="p">,</span><span class="w"> </span><span class="n">z_score</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre>
+                        </div>
+                        <p class="code-note">Simplified example. Table and column names are illustrative.</p>
+
+                        <h4>The Results for Ribeye Steak</h4>
+                        <p class="lead">
+                            The output was summarized in Excel by meat item. Below are the 15 items most strongly purchased with ribeye steak, with
+                            the probability of each being in a basket with and without the steak and its two-proportion z-score:
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-xl-11">
+                        <figure class="shot">
+                            <a href="../images/affinity_excel.png" target="_blank" rel="noopener"><img src="../images/affinity_excel.png" alt="Excel table: 15 items frequently purchased with Ribeye Steak, with probabilities with and without the steak and two-proportion z-scores" /></a>
+                            <figcaption>Ribeye Steak and the 15 items most frequently purchased with it, sorted by z-score. Click to enlarge.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="mt-4">Results &amp; Business Impact</h2>
+                        <p class="lead">
+                            We used these results to change how products were laid out in stores and promoted. When ribeye steak went on sale, we
+                            placed potatoes right next to the ribeye in the weekly ad, enticing customers to build their basket around the steak.
+                        </p>
+                        <div class="callout">
+                            <span class="callout-label">From data to the weekly ad</span>
+                            <div class="callout-math"><b>Ribeye on sale</b> <span>&rarr;</span> <b>Potatoes</b> featured right beside it</div>
+                            <p>The same approach applied to every meat item, giving merchandising a ranked list of the best companion items to
+                            pair in the ad and display together in stores.</p>
+                        </div>
+                        <ol class="lead">
+                            <li>Measured purchase affinity between every meat item and every non-meat item sold at Fresh Thyme Market</li>
+                            <li>Used two-proportion z-tests to separate real buying patterns from random chance</li>
+                            <li>Informed store layout changes, placing high-affinity items near the meat they pair with</li>
+                            <li>Shaped the weekly ad by featuring companion items, like potatoes, next to meat on sale</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer-->
+        <footer class="py-5 bg-primary">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Jackson Bronkema 2026</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
