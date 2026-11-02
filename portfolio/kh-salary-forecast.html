@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Salary Forecast Model</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet" />
+        <link href="css/theme.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+
+        <!-- Header-->
+        <header class="header bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">Forecasting Firm-Wide Salaries with Multiple Linear Regression</h1>
+                <p class="lead">SQL | Python (pandas, statsmodels) in VS Code | Multiple Linear Regression, Financial Forecasting, Executive Reporting</p>
+                <p class="lead">Project Completed by: Jackson Bronkema, Kimley-Horn Business Intelligence</p>
+            </div>
+        </header>
+
+        <section class="bg-light" id="services">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+
+                        <div class="data-notice" role="note"><strong>Note:</strong> All data on this page has been anonymized to protect confidential company information. Dollar figures, multipliers, utilization rates, and code are illustrative.</div>
+
+                        <h2 class="h2top">Problem Statement</h2>
+                        <p class="lead">
+                            The salary forecast is a vital input to how Kimley-Horn forecasts its net revenue. Leadership projects total net
+                            revenue for the firm with one equation:
+                        </p>
+                        <div class="callout">
+                            <span class="callout-label">How the salary forecast drives revenue</span>
+                            <div class="callout-math"><b>Net Revenue</b> <span>=</span> Total Salaries <span>&times;</span> Multiplier <span>&times;</span> UT</div>
+                            <p>Every dollar of error in the salary forecast is multiplied straight into the net revenue forecast, so a more
+                            accurate salary forecast means a more accurate picture of the firm’s revenue.</p>
+                        </div>
+                        <p class="lead">
+                            The legacy salary forecast was missing by millions of dollars. I set out to build a more accurate, data-driven
+                            model of total firm-wide salaries.
+                        </p>
+
+                        <!-- Key results -->
+                        <div class="stat-row">
+                            <div class="stat"><span class="stat-num">77%</span><span class="stat-label">Less forecast error than the legacy model</span></div>
+                            <div class="stat"><span class="stat-num">$9.8M</span><span class="stat-label">Reduction in forecast error</span></div>
+                            <div class="stat"><span class="stat-num">0.24%</span><span class="stat-label">Average monthly error this fiscal year</span></div>
+                            <div class="stat"><span class="stat-num">Monthly</span><span class="stat-label">Forecast report for the leadership team</span></div>
+                        </div>
+
+                        <h2>Our Approach</h2>
+
+                        <h4>1. Pulling the Data with SQL</h4>
+                        <p class="lead">
+                            I wrote SQL queries against Kimley-Horn’s general ledger to pull total salary dollars for every month back to 2019.
+                            That history became the target the model learns to predict.
+                        </p>
+
+                        <h4>2. Building the Model in Python</h4>
+                        <p class="lead">
+                            I brought the data into VS Code and used Python to build a multiple linear regression model of aggregate salaries
+                            for the firm. The model’s inputs are:
+                        </p>
+                        <ol class="lead">
+                            <li><strong>Number of employees by GLC group:</strong> headcount at each level of the firm</li>
+                            <li><strong>Average hourly rate by GLC group:</strong> what each level is paid on average</li>
+                            <li><strong>Date flags:</strong> month-of-year and holiday effects</li>
+                            <li><strong>Intern season flags:</strong> the spring, summer, and fall swings in intern hiring</li>
+                        </ol>
+                        <p class="lead">
+                            Because the model is built from headcount and pay rates, it moves with the business: as the firm hires or raises
+                            rates in a GLC group, the forecast responds directly.
+                        </p>
+
+                        <h4>3. Testing It Against the Legacy Model</h4>
+                        <p class="lead">
+                            I trained the model on historical months, then tested it on months it had never seen and compared its error to the
+                            legacy forecast’s. The new model reduced error by 77%, or $9.8M. Once validated, the model is refit every month on
+                            all closed periods to forecast the rest of the year, with a 95% range around each month’s prediction.
+                        </p>
+
+                        <h4>The Model in Python</h4>
+                        <div class="code-card">
+                            <div class="code-head"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-file">salary_projection_model.py</span></div>
+<pre class="code-body"><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="c1"># Monthly salary dollars from the general ledger (pulled with SQL), joined to</span>
+<span class="c1"># headcount and average hourly rate by GLC group plus date and intern flags</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">salary_df</span>
+      <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">glc_inputs_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;FY_CD&quot;</span><span class="p">,</span> <span class="s2">&quot;PD_NO&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">date_flags_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;FY_CD&quot;</span><span class="p">,</span> <span class="s2">&quot;PD_NO&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">))</span>
+
+<span class="n">GLC_GROUPS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GLC_1&quot;</span><span class="p">,</span> <span class="s2">&quot;GLC_2&quot;</span><span class="p">,</span> <span class="s2">&quot;GLC_3&quot;</span><span class="p">,</span> <span class="s2">&quot;GLC_4&quot;</span><span class="p">,</span> <span class="s2">&quot;GLC_5&quot;</span><span class="p">,</span> <span class="s2">&quot;GLC_6&quot;</span><span class="p">]</span>
+<span class="n">MONTHS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;JAN&quot;</span><span class="p">,</span> <span class="s2">&quot;FEB&quot;</span><span class="p">,</span> <span class="s2">&quot;MAR&quot;</span><span class="p">,</span> <span class="s2">&quot;APR&quot;</span><span class="p">,</span> <span class="s2">&quot;MAY&quot;</span><span class="p">,</span> <span class="s2">&quot;JUN&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;JUL&quot;</span><span class="p">,</span> <span class="s2">&quot;AUG&quot;</span><span class="p">,</span> <span class="s2">&quot;SEP&quot;</span><span class="p">,</span> <span class="s2">&quot;OCT&quot;</span><span class="p">,</span> <span class="s2">&quot;NOV&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC&quot;</span><span class="p">]</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Empls_</span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">GLC_GROUPS</span><span class="p">]</span>               <span class="c1"># number of employees</span>
+    <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Avg_Hourly_Rate_</span><span class="si">{</span><span class="n">g</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">GLC_GROUPS</span><span class="p">]</span>   <span class="c1"># average hourly rate</span>
+    <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">_FLAG&quot;</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">MONTHS</span><span class="p">]</span>                  <span class="c1"># month / date flags</span>
+    <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;COVID_FLAG&quot;</span><span class="p">,</span> <span class="s2">&quot;Intern_Spring&quot;</span><span class="p">,</span> <span class="s2">&quot;Intern_Summer&quot;</span><span class="p">,</span> <span class="s2">&quot;Intern_Fall&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">TARGET</span> <span class="o">=</span> <span class="s2">&quot;Final_Salary_Dollars&quot;</span>
+
+<span class="c1"># Train on history, then test on months the model has never seen</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;YEAR_PERIOD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">201901</span><span class="p">,</span> <span class="mi">202512</span><span class="p">)]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;YEAR_PERIOD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">202601</span><span class="p">,</span> <span class="mi">202609</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">TARGET</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="n">features</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">test</span><span class="p">[</span><span class="s2">&quot;Prediction&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
+<span class="n">test</span><span class="p">[</span><span class="s2">&quot;Abs_Error_%&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;Prediction&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">test</span><span class="p">[</span><span class="n">TARGET</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">/</span> <span class="n">test</span><span class="p">[</span><span class="n">TARGET</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Average absolute error: </span><span class="si">{</span><span class="n">test</span><span class="p">[</span><span class="s1">&#39;Abs_Error_%&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Refit on every closed month and forecast the rest of the year</span>
+<span class="n">closed</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;YEAR_PERIOD&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">202609</span><span class="p">]</span>
+<span class="n">future</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;YEAR_PERIOD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">202610</span><span class="p">,</span> <span class="mi">202612</span><span class="p">)]</span>
+<span class="n">final_model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">closed</span><span class="p">[</span><span class="n">TARGET</span><span class="p">],</span> <span class="n">closed</span><span class="p">[</span><span class="n">features</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">final_model</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">future</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
+<span class="n">forecast</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">summary_frame</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>              <span class="c1"># 95% range</span>
+<span class="n">forecast</span> <span class="o">=</span> <span class="n">forecast</span><span class="p">[[</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;obs_ci_lower&quot;</span><span class="p">,</span> <span class="s2">&quot;obs_ci_upper&quot;</span><span class="p">]]</span>
+</code></pre>
+                        </div>
+                        <p class="code-note">Simplified example. Credentials, connection details, file paths, and internal group names have been removed.</p>
+
+                        <h2 class="mt-4">Business Impact</h2>
+                        <p class="lead">
+                            Because net revenue is calculated as total salaries &times; multiplier &times; UT, cutting the salary forecast’s error
+                            by 77% directly sharpens the firm’s revenue forecast. Leadership now plans with a forecast that has averaged an error
+                            of a fraction of a percent per month, along with a clear 95% range for every month still to come.
+                        </p>
+                        <ol class="lead">
+                            <li>Reduced salary forecast error by 77% ($9.8M) compared with the legacy model</li>
+                            <li>Fed a more accurate salary forecast directly into the firm’s net revenue projection</li>
+                            <li>Built a monthly forecast report for the leadership team, comparing predictions to actuals, budget, and prior forecasts</li>
+                            <li>Showed exactly how changes in salaries, multiplier, and UT move net revenue from one forecast to the next</li>
+                        </ol>
+
+                        <h2 class="mt-4">The Monthly Leadership Report</h2>
+                        <p class="lead">
+                            Each month, the model produces the report below for the leadership team. It shows every month’s actual against its
+                            prediction, the forecast for the remaining months with 95% ranges, the comparison to budget, and the resulting net
+                            revenue projection. All figures shown here have been anonymized.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-xl-11">
+                        <div class="report-frame">
+                            <div class="code-head"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-file">Salary_Forecast_Summary.html</span></div>
+                            <iframe src="salary-forecast-summary.html" title="Anonymized monthly salary forecast report" loading="lazy" scrolling="no"
+                                    onload="try{this.style.height=this.contentWindow.document.documentElement.scrollHeight+'px'}catch(e){}"></iframe>
+                        </div>
+                        <p class="code-note" style="text-align:center"><a href="salary-forecast-summary.html" target="_blank" rel="noopener">Open the full report in a new tab</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer-->
+        <footer class="py-5 bg-primary">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Jackson Bronkema 2026</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
